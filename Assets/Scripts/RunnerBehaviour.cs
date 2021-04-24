@@ -31,6 +31,12 @@ public class RunnerBehaviour : MonoBehaviour, IEnemy
     [SerializeField] private DropSpawner dropSpawner;
 
     private Transform target;
+    private CapsuleCollider capsuleCollider;
+
+    private void Awake()
+    {
+        capsuleCollider = GetComponent<CapsuleCollider>();
+    }
 
     private void Start()
     {
@@ -64,17 +70,18 @@ public class RunnerBehaviour : MonoBehaviour, IEnemy
 
     private IEnumerator DeathRoutine()
     {
+        capsuleCollider.enabled = false;
         animator.SetTrigger(DEAD_ANIMATOR_ID);
         navMeshAgent.isStopped = true;
         navMeshAgent.enabled = false;
-
-        yield return new WaitForSeconds(3f);
 
         if (lootDescription != null)
         {
             var drop = lootDescription.SelectDropRandomly();
             dropSpawner.SpawnDropAt(drop, transform.position);
         }
+
+        yield return new WaitForSeconds(3f);
 
         Destroy(gameObject);
     }
