@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpecialAttackAsDrop : RuntimeDropInstance
 {
-    [SerializeField] private ProjectileSpellDescription spellDescription;
+    [SerializeField] private WallSpellDescription spellDescription;
     private PlayerHud playerHud;
 
     private void Awake()

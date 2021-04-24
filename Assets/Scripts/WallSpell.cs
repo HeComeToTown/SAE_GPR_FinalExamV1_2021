@@ -17,13 +17,13 @@ public class WallSpell : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y < spawnPointY + transform.localScale.y)
+        if (transform.position.y < spawnPointY + transform.localScale.y * 0.7f)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y + riseSpeed * Time.deltaTime, transform.position.z);
         }
         else
         {
-            transform.position = new Vector3(transform.position.x, spawnPointY + transform.localScale.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x, spawnPointY + transform.localScale.y * 0.7f, transform.position.z);
         }
     }
 }

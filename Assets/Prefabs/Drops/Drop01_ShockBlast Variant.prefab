@@ -10073,4 +10073,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropUIText: {fileID: 2966791485771882007}
-  spellDescription: {fileID: 11400000, guid: fdae951968a3690458af55414ccaaba8, type: 2}
+  spellDescription: {fileID: 11400000, guid: f13338b355a9d8745a659464d797b37e, type: 2}

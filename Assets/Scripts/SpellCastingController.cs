@@ -12,7 +12,7 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
     [SerializeField] private Transform castLocationTransform;
     [SerializeField] private ProjectileSpellDescription simpleAttackSpell;
     
-    private ProjectileSpellDescription specialAttackSpell;
+    private WallSpellDescription specialAttackSpell;
 
     private bool inAction;
     private bool castingSimpleAttack;
@@ -69,11 +69,11 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         inAction = true;
         animator.SetTrigger(specialAttackSpell.AnimationVariableName);
 
-        yield return new WaitForSeconds(specialAttackSpell.ProjectileSpawnDelay);
+        yield return new WaitForSeconds(specialAttackSpell.WallSpawnDelay);
 
-        Instantiate(specialAttackSpell.ProjectilePrefab, castLocationTransform.position, castLocationTransform.rotation);
+        Instantiate(specialAttackSpell.WallPrefab, new Vector3(castLocationTransform.position.x + transform.forward.x * 5, castLocationTransform.position.y - 2.5f, castLocationTransform.position.z + transform.forward.z * 5), castLocationTransform.rotation);
 
-        yield return new WaitForSeconds(specialAttackSpell.Duration - specialAttackSpell.ProjectileSpawnDelay);
+        yield return new WaitForSeconds(specialAttackSpell.Duration - specialAttackSpell.WallSpawnDelay);
 
         lastSpecialAttackTimestamp = Time.time;
         castingSpecialAttack = false;
@@ -105,7 +105,7 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         return castingSpecialAttack;
     }
 
-    public void SetSpecialAttack(ProjectileSpellDescription specialSpellToSet)
+    public void SetSpecialAttack(WallSpellDescription specialSpellToSet)
     {
         specialAttackSpell = specialSpellToSet;
     }
