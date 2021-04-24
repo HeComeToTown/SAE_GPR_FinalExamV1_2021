@@ -20,6 +20,7 @@ public class RunnerBehaviour : MonoBehaviour, IEnemy
     [SerializeField] private Renderer skinRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private LootDescription lootDescription;
+    [SerializeField] private CapsuleCollider capsuleCollider;
 
     [SerializeField] private NavMeshAgent navMeshAgent;
 
@@ -31,12 +32,6 @@ public class RunnerBehaviour : MonoBehaviour, IEnemy
     [SerializeField] private DropSpawner dropSpawner;
 
     private Transform target;
-    private CapsuleCollider capsuleCollider;
-
-    private void Awake()
-    {
-        capsuleCollider = GetComponent<CapsuleCollider>();
-    }
 
     private void Start()
     {

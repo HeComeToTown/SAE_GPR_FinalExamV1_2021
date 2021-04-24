@@ -14,6 +14,7 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
 
 
     private bool inAction;
+    private bool casting;
     private float lastSimpleAttackTimestamp = -100;
 
     public SpellDescription SimpleAttackSpellDescription { get => simpleAttackSpell; }
@@ -32,7 +33,9 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         {
             if (simpleAttack && GetSimpleAttackCooldown() == 0)
             {
+                casting = true;
                 StartCoroutine(SimpleAttackRoutine());
+
             }
             else if (specialAttack)
             {
@@ -53,6 +56,7 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         yield return new WaitForSeconds(simpleAttackSpell.Duration - simpleAttackSpell.ProjectileSpawnDelay);
 
         lastSimpleAttackTimestamp = Time.time;
+        casting = false;
         inAction = false;
     }
 
@@ -64,5 +68,10 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
     public float GetSimpleAttackCooldown()
     {
         return Mathf.Max(0, lastSimpleAttackTimestamp + simpleAttackSpell.Cooldown - Time.time);
+    }
+
+    public bool GetCasting()
+    {
+        return casting;
     }
 }
