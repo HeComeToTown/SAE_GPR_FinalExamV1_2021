@@ -14,14 +14,17 @@ public class LootDescription : ScriptableObject
     {
         for (int i = 0; i < drops.Length; i++)
         {
-            float rnd = Random.value;
+            float lootIteration = (float)i / (float)drops.Length;
+            float rnd = Random.Range(lootIteration, 1f);
+
             DropProbabilityPair pair = drops[i];
 
-            if (rnd < pair.Probability)
+            if (rnd >= pair.Probability)
             {
                 return pair.Drop;
             }
         }
+
         return null;
     }
 }
