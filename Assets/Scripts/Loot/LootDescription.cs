@@ -12,17 +12,22 @@ public class LootDescription : ScriptableObject
 
     public Drop SelectDropRandomly()
     {
+        float rnd = Random.value;
+        Debug.Log(rnd);
+
         for (int i = 0; i < drops.Length; i++)
         {
-            float lootIteration = (float)i / (float)drops.Length;
-            float rnd = Random.Range(lootIteration, 1f);
-
-            DropProbabilityPair pair = drops[i];
-
-            if (rnd >= pair.Probability)
+            if (rnd > (i == 0 ? 0 : drops[i - 1].Probability) && rnd <= (i == drops.Length -1 ? 1 : drops[i].Probability + (i == 0 ? 0 : drops[i - 1].Probability)))
             {
-                return pair.Drop;
+                return drops[i].Drop;
             }
+
+            //DropProbabilityPair pair = drops[i];
+
+            //if (rnd < pair.Probability)
+            //{
+            //    return pair.Drop;
+            //}
         }
 
         return null;

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drops:
   - Drop: {fileID: 11400000, guid: 869a260729164b94d833c52d3dc0d41f, type: 2}
-    Probability: 0.5
+    Probability: 0.33
   - Drop: {fileID: 11400000, guid: 0bde8caaa21dbb0469af86af5120360f, type: 2}
-    Probability: 0.5
+    Probability: 0.33
+  - Drop: {fileID: 11400000, guid: f01a867e0c069964592000a8d7c1a1b2, type: 2}
+    Probability: 0.33

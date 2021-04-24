@@ -13,7 +13,6 @@ public class DespawnParticleEffect : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(particleSystem.main.duration);
         Destroy(gameObject, particleSystem.main.duration);
     }
 }
