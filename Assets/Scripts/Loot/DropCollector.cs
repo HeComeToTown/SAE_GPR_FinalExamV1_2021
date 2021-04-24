@@ -29,6 +29,7 @@ public class DropCollector : MonoBehaviour
     private void Collect(RuntimeDropInstance drop)
     {
         Debug.Log($"Collected: {drop.GetDrop().DropName}");
+        drop.OnPickUp(gameObject);
         dropsInRange.Remove(drop);
         Destroy(drop.gameObject);
         DropsInRangeChanged?.Invoke();

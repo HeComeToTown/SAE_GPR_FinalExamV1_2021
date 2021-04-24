@@ -11,11 +11,14 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
     [SerializeField] private Animator animator;
     [SerializeField] private Transform castLocationTransform;
     [SerializeField] private ProjectileSpellDescription simpleAttackSpell;
-
+    
+    private ProjectileSpellDescription specialAttackSpell;
 
     private bool inAction;
-    private bool casting;
+    private bool castingSimpleAttack;
+    private bool castingSpecialAttack;
     private float lastSimpleAttackTimestamp = -100;
+    private float lastSpecialAttackTimestamp = -100;
 
     public SpellDescription SimpleAttackSpellDescription { get => simpleAttackSpell; }
 
@@ -33,13 +36,14 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         {
             if (simpleAttack && GetSimpleAttackCooldown() == 0)
             {
-                casting = true;
+                castingSimpleAttack = true;
                 StartCoroutine(SimpleAttackRoutine());
 
             }
-            else if (specialAttack)
+            else if (specialAttack && GetSpecialAttackCooldown() == 0 && specialAttackSpell != null)
             {
-                Debug.Log("Trigger special attack");
+                castingSpecialAttack = true;
+                StartCoroutine(SpecialAttackRoutine());
             }
         }
     }
@@ -56,7 +60,23 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         yield return new WaitForSeconds(simpleAttackSpell.Duration - simpleAttackSpell.ProjectileSpawnDelay);
 
         lastSimpleAttackTimestamp = Time.time;
-        casting = false;
+        castingSimpleAttack = false;
+        inAction = false;
+    }
+
+    private IEnumerator SpecialAttackRoutine()
+    {
+        inAction = true;
+        animator.SetTrigger(specialAttackSpell.AnimationVariableName);
+
+        yield return new WaitForSeconds(specialAttackSpell.ProjectileSpawnDelay);
+
+        Instantiate(specialAttackSpell.ProjectilePrefab, castLocationTransform.position, castLocationTransform.rotation);
+
+        yield return new WaitForSeconds(specialAttackSpell.Duration - specialAttackSpell.ProjectileSpawnDelay);
+
+        lastSpecialAttackTimestamp = Time.time;
+        castingSpecialAttack = false;
         inAction = false;
     }
 
@@ -70,8 +90,23 @@ public class SpellCastingController : MonoBehaviour, IPlayerAction
         return Mathf.Max(0, lastSimpleAttackTimestamp + simpleAttackSpell.Cooldown - Time.time);
     }
 
-    public bool GetCasting()
+    public float GetSpecialAttackCooldown()
     {
-        return casting;
+        return Mathf.Max(0, lastSpecialAttackTimestamp + specialAttackSpell.Cooldown - Time.time);
+    }
+
+    public bool GetCastingSimpleAttack()
+    {
+        return castingSimpleAttack;
+    }
+
+    public bool GetCastingSpecialAttack()
+    {
+        return castingSpecialAttack;
+    }
+
+    public void SetSpecialAttack(ProjectileSpellDescription specialSpellToSet)
+    {
+        specialAttackSpell = specialSpellToSet;
     }
 }

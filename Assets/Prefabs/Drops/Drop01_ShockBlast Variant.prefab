@@ -9982,7 +9982,7 @@ GameObject:
   - component: {fileID: 7090236457756585749}
   - component: {fileID: 7090236457756585750}
   - component: {fileID: 7090236457756585752}
-  - component: {fileID: 7090236457756585753}
+  - component: {fileID: 6995542435432493626}
   m_Layer: 0
   m_Name: Drop01_ShockBlast Variant
   m_TagString: Untagged
@@ -10060,7 +10060,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7090236457756585753
+--- !u!114 &6995542435432493626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10069,7 +10069,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7090236457756585748}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3062376730db6e468f857e4af9e44d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 083b6dd342b71c648a3cb6f442ffdcb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropUIText: {fileID: 2966791485771882007}
+  spellDescription: {fileID: 11400000, guid: fdae951968a3690458af55414ccaaba8, type: 2}

@@ -6,25 +6,40 @@ public class PlayerHud : MonoBehaviour
     [SerializeField] private SpellCastingController spellCastingController;
     [SerializeField] private DropCollector dropCollector;
 
-    [SerializeField] private RectTransform spellIconRectTransform;
-    [SerializeField] private Image spellIcon;
-    [SerializeField] private Outline spellIconOutline;
-    [SerializeField] private TMPro.TMP_Text spellCooldownText;
+    [SerializeField] private RectTransform simpleSpellIconRectTransform;
+    [SerializeField] private Image simpleSpellIcon;
+    [SerializeField] private Outline simpleSpellIconOutline;
+    [SerializeField] private TMPro.TMP_Text simpleSpellCooldownText;
     [SerializeField] private GameObject collectUIObject;
 
-    [SerializeField] private float maxSpellIconSize;
-    [SerializeField] private float spellIconSizeFlatIncreasePerSecond;
-    [SerializeField] private float spellIconSizeFlatDecreasePerSecond;
+    [SerializeField] private RectTransform specialSpellIconRectTransform;
+    [SerializeField] private Image specialSpellIcon;
+    [SerializeField] private Outline specialSpellIconOutline;
+    [SerializeField] private TMPro.TMP_Text specialSpellCooldownText;
 
-    float currentSpellIconSize = 1f;
+    [SerializeField] private float simpleMaxSpellIconSize;
+    [SerializeField] private float simpleSpellIconSizeFlatIncreasePerSecond;
+    [SerializeField] private float simpleSpellIconSizeFlatDecreasePerSecond;
+
+    [SerializeField] private float specialMaxSpellIconSize;
+    [SerializeField] private float specialSpellIconSizeFlatIncreasePerSecond;
+    [SerializeField] private float specialSpellIconSizeFlatDecreasePerSecond;
+
+    float simpleCurrentSpellIconSize = 1f;
+    float specialCurrentSpellIconSize = 1f;
+    
+    bool hasSpecialAttack = false;
 
     private void Start()
     {
         Debug.Assert(spellCastingController != null, "SpellCastingController reference is null");
         Debug.Assert(dropCollector != null, "DropCollector reference is null");
 
-        spellIcon.sprite = spellCastingController.SimpleAttackSpellDescription.SpellIcon;
-        if (spellIconOutline.IsActive()) { spellIconOutline.enabled = false; }
+        simpleSpellIcon.sprite = spellCastingController.SimpleAttackSpellDescription.SpellIcon;
+        if (simpleSpellIconOutline.IsActive()) { simpleSpellIconOutline.enabled = false; }
+        if (specialSpellIconOutline.IsActive()) { specialSpellIconOutline.enabled = false; }
+
+        specialSpellCooldownText.text = "";
 
         dropCollector.DropsInRangeChanged += OnDropsInRangeChanged;
     }
@@ -36,45 +51,95 @@ public class PlayerHud : MonoBehaviour
 
     private void Update()
     {
-        float cooldown = spellCastingController.GetSimpleAttackCooldown();
-        bool casting = spellCastingController.GetCasting();
+        float simpleCooldown = spellCastingController.GetSimpleAttackCooldown();
+        bool castingSimple = spellCastingController.GetCastingSimpleAttack();
 
-        if (cooldown > 0)
+        if (simpleCooldown > 0)
         {
-            spellCooldownText.text = cooldown.ToString("0.0");
-            spellIcon.color = new Color(0.25f, 0.25f, 0.25f, 1);
+            simpleSpellCooldownText.text = simpleCooldown.ToString("0.0");
+            simpleSpellIcon.color = new Color(0.25f, 0.25f, 0.25f, 1);
 
-            if (currentSpellIconSize > 1f && !casting)
+            if (simpleCurrentSpellIconSize > 1f && !castingSimple)
             {
-                currentSpellIconSize = Mathf.Max(currentSpellIconSize - spellIconSizeFlatDecreasePerSecond * Time.deltaTime, 1f);
-                spellIconRectTransform.localScale = new Vector3(currentSpellIconSize, currentSpellIconSize);
+                simpleCurrentSpellIconSize = Mathf.Max(simpleCurrentSpellIconSize - simpleSpellIconSizeFlatDecreasePerSecond * Time.deltaTime, 1f);
+                simpleSpellIconRectTransform.localScale = new Vector3(simpleCurrentSpellIconSize, simpleCurrentSpellIconSize);
             }
         }
         else
         {
-            spellCooldownText.text = "";
-            spellIcon.color = Color.white;
+            simpleSpellCooldownText.text = "";
+            simpleSpellIcon.color = Color.white;
 
-            //if (!casting)
-            //{
-            //    spellIconRectTransform.localScale = new Vector3(1f, 1f);
-            //    currentSpellIconSize = 1f;
-            //}
+            if (!castingSimple)
+            {
+                simpleSpellIconRectTransform.localScale = new Vector3(1f, 1f);
+                simpleCurrentSpellIconSize = 1f;
+            }
         }
 
-        if (casting)
+        if (castingSimple)
         {
-            spellIconOutline.enabled = true;
+            simpleSpellIconOutline.enabled = true;
 
-            if (currentSpellIconSize < maxSpellIconSize)
+            if (simpleCurrentSpellIconSize < simpleMaxSpellIconSize)
             {
-                currentSpellIconSize = Mathf.Min(currentSpellIconSize + spellIconSizeFlatIncreasePerSecond * Time.deltaTime, maxSpellIconSize);
-                spellIconRectTransform.localScale = new Vector3(currentSpellIconSize, currentSpellIconSize);
+                simpleCurrentSpellIconSize = Mathf.Min(simpleCurrentSpellIconSize + simpleSpellIconSizeFlatIncreasePerSecond * Time.deltaTime, simpleMaxSpellIconSize);
+                simpleSpellIconRectTransform.localScale = new Vector3(simpleCurrentSpellIconSize, simpleCurrentSpellIconSize);
             }
         }
         else
         {
-            spellIconOutline.enabled = false;
+            simpleSpellIconOutline.enabled = false;
         }
+
+        if (hasSpecialAttack)
+        {
+            float specialCooldown = spellCastingController.GetSpecialAttackCooldown();
+            bool castingSpecial = spellCastingController.GetCastingSpecialAttack();
+
+            if (specialCooldown > 0)
+            {
+                specialSpellCooldownText.text = specialCooldown.ToString("0.0");
+                specialSpellIcon.color = new Color(0.25f, 0.25f, 0.25f, 1);
+
+                if (specialCurrentSpellIconSize > 1f && !castingSpecial)
+                {
+                    specialCurrentSpellIconSize = Mathf.Max(specialCurrentSpellIconSize - specialSpellIconSizeFlatDecreasePerSecond * Time.deltaTime, 1f);
+                    specialSpellIconRectTransform.localScale = new Vector3(specialCurrentSpellIconSize, specialCurrentSpellIconSize);
+                }
+            }
+            else
+            {
+                specialSpellCooldownText.text = "";
+                specialSpellIcon.color = Color.white;
+
+                if (!castingSpecial)
+                {
+                    specialSpellIconRectTransform.localScale = new Vector3(1f, 1f);
+                    specialCurrentSpellIconSize = 1f;
+                }
+            }
+
+            if (castingSpecial)
+            {
+                specialSpellIconOutline.enabled = true;
+
+                if (specialCurrentSpellIconSize < specialMaxSpellIconSize)
+                {
+                    specialCurrentSpellIconSize = Mathf.Min(specialCurrentSpellIconSize + specialSpellIconSizeFlatIncreasePerSecond * Time.deltaTime, specialMaxSpellIconSize);
+                    specialSpellIconRectTransform.localScale = new Vector3(specialCurrentSpellIconSize, specialCurrentSpellIconSize);
+                }
+            }
+            else
+            {
+                specialSpellIconOutline.enabled = false;
+            }
+        }
+    }
+
+    public void SetSpecialSpellIcon(Sprite image)
+    {
+        specialSpellIcon.sprite = image;
+        hasSpecialAttack = true;
     }
 }

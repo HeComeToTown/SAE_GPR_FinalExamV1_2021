@@ -18,4 +18,9 @@ public class RuntimeDropInstance : MonoBehaviour, IDropOwner
         dropUIText.text = drop.DropName;
         dropUIText.color = drop.Rarity.ToColor();
     }
+
+    public virtual void OnPickUp(GameObject player) 
+    {
+        
+    }
 }
